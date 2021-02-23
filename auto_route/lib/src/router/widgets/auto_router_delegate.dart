@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import '../../utils.dart';
 import '../controller/routing_controller.dart';
 
-class RootRouterDelegate extends RouterDelegate<List<PageRouteInfo?>>
+class RootRouterDelegate extends RouterDelegate<List<PageRouteInfo>>
     with ChangeNotifier {
   final List<PageRouteInfo>? initialRoutes;
   final GlobalKey<NavigatorState> navigatorKey;
@@ -43,16 +43,16 @@ class RootRouterDelegate extends RouterDelegate<List<PageRouteInfo?>>
   }
 
   @override
-  List<PageRouteInfo?>? get currentConfiguration {
+  List<PageRouteInfo>? get currentConfiguration {
     var route = controller.topMost.current;
     if (route == null) {
       return null;
     }
-    return route.breadcrumbs.map((e) => e.route).toList(growable: false);
+    return route.breadcrumbs.map((e) => e.route!).toList(growable: false);
   }
 
   @override
-  Future<void> setInitialRoutePath(List<PageRouteInfo?>? routes) {
+  Future<void> setInitialRoutePath(List<PageRouteInfo>? routes) {
     // setInitialRoutePath is re-fired on enabling
     // select widget mode from flutter inspector,
     // this check is preventing it from rebuilding the app
@@ -72,9 +72,9 @@ class RootRouterDelegate extends RouterDelegate<List<PageRouteInfo?>>
   }
 
   @override
-  Future<void> setNewRoutePath(List<PageRouteInfo?>? routes) {
+  Future<void> setNewRoutePath(List<PageRouteInfo> routes) {
     if (!listNullOrEmpty(routes)) {
-      return (controller as BranchEntry).updateOrReplaceRoutes(routes!);
+      return (controller as BranchEntry).updateOrReplaceRoutes(routes);
     }
     return SynchronousFuture(null);
   }

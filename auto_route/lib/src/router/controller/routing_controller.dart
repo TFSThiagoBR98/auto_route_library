@@ -70,7 +70,7 @@ abstract class StackRouter extends RoutingController {
 
   Future<void> replace(PageRouteInfo route, {OnNavigationFailure? onFailure});
 
-  Future<void> pushAll(List<PageRouteInfo?>? routes,
+  Future<void> pushAll(List<PageRouteInfo>? routes,
       {OnNavigationFailure? onFailure});
 
   Future<void> popAndPushAll(List<PageRouteInfo> routes,
@@ -498,7 +498,7 @@ class BranchEntry extends ChangeNotifier
 
   @override
   Future<void> pushAll(
-    List<PageRouteInfo?>? routes, {
+    List<PageRouteInfo>? routes, {
     OnNavigationFailure? onFailure,
   }) {
     return _pushAll(routes!, onFailure: onFailure);
@@ -598,13 +598,13 @@ class BranchEntry extends ChangeNotifier
   }
 
   Future<void> _pushAll(
-    List<PageRouteInfo?> routes, {
+    List<PageRouteInfo> routes, {
     OnNavigationFailure? onFailure,
     bool notify = true,
   }) async {
     final checkedRoutes = List<PageRouteInfo>.from(routes);
     for (var route in routes) {
-      var config = _resolveConfigOrReportFailure(route!, onFailure);
+      var config = _resolveConfigOrReportFailure(route, onFailure);
       if (config == null) {
         break;
       }
@@ -688,13 +688,13 @@ class BranchEntry extends ChangeNotifier
     );
   }
 
-  Future<void> _replaceAll(List<PageRouteInfo?> routes, {bool notify = true}) {
+  Future<void> _replaceAll(List<PageRouteInfo> routes, {bool notify = true}) {
     assert(routes != null && routes.isNotEmpty);
     _clearHistory();
     return _pushAll(routes, notify: notify);
   }
 
-  Future<void> updateOrReplaceRoutes(List<PageRouteInfo?> routes) {
+  Future<void> updateOrReplaceRoutes(List<PageRouteInfo> routes) {
     assert(routes != null && routes.isNotEmpty);
 
     final mayUpdateRoute = routes.last;

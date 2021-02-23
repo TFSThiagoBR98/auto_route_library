@@ -24,7 +24,7 @@ class DefaultRouteParser extends RouteInformationParser<List<PageRouteInfo>> {
     if (matches != null) {
       routes = matches.map((m) => m!.toRoute).toList(growable: false);
     }
-    return SynchronousFuture<List<PageRouteInfo>?>(routes);
+    return SynchronousFuture<List<PageRouteInfo>>(routes);
   }
 
   @override

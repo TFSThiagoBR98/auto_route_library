@@ -27,14 +27,14 @@ class Parameters {
   @override
   int get hashCode => _params.hashCode;
 
-  String getString(String key, [String defaultValue]) =>
+  String? getString(String key, [String? defaultValue]) =>
       _params[key] ?? defaultValue;
 
   dynamic get(String key, [defaultValue]) {
     return _params[key] ?? defaultValue;
   }
 
-  int getInt(String key, [int defaultValue]) {
+  int? getInt(String key, [int? defaultValue]) {
     var param = _params[key];
     if (param == null) {
       return defaultValue;
@@ -45,7 +45,7 @@ class Parameters {
     }
   }
 
-  double getDouble(String key, [double defaultValue]) {
+  double? getDouble(String key, [double? defaultValue]) {
     var param = _params[key];
     if (param == null) {
       return defaultValue;
@@ -56,7 +56,7 @@ class Parameters {
     }
   }
 
-  num getNum(String key, [num defaultValue]) {
+  num? getNum(String key, [num? defaultValue]) {
     var param = _params[key];
     if (param == null) {
       return defaultValue;
@@ -67,7 +67,7 @@ class Parameters {
     }
   }
 
-  bool getBool(String key) {
+  bool? getBool(String key) {
     switch (_params[key]?.toLowerCase()) {
       case 'true':
         return true;

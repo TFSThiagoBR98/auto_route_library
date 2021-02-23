@@ -25,9 +25,9 @@ class RouteData extends RouteSettings {
 
   String get path => routeMatch.uri.path;
 
-  Object get _initialArgsToPass => routeMatch.initialArgsToPass;
+  Object? get _initialArgsToPass => routeMatch.initialArgsToPass;
 
-  T getArgs<T>({bool nullOk = true, T Function() orElse}) {
+  T getArgs<T>({bool nullOk = true, T Function()? orElse}) {
     if (nullOk == true) {
       assert(orElse != null);
     }
@@ -35,7 +35,7 @@ class RouteData extends RouteSettings {
       throw FlutterError(
           'Expected [${T.toString()}],  found [${arguments?.runtimeType}]');
     }
-    return arguments as T ?? orElse();
+    return arguments as T? ?? orElse!();
   }
 
   bool _hasInvalidArgs<T>(bool nullOk) {
@@ -52,7 +52,7 @@ class RouteData extends RouteSettings {
         'path: ${routeMatch.path}, fullName: ${routeMatch.name}, args: $arguments,  params: $_pathParams, query: $_queryParams}';
   }
 
-  static RouteData of(BuildContext context) {
+  static RouteData? of(BuildContext context) {
     var modal = ModalRoute.of(context);
     if (modal != null && modal.settings is RouteData) {
       return modal.settings as RouteData;
@@ -73,17 +73,17 @@ class RouteData extends RouteSettings {
 
 @immutable
 class ParentRouteData<T extends RouterBase> extends RouteData {
-  final Uri initialRoute;
-  final T router;
+  final Uri? initialRoute;
+  final T? router;
 
   ParentRouteData({
     this.initialRoute,
     this.router,
-    RouteMatch matchResult,
+    required RouteMatch matchResult,
   }) : super(matchResult);
 
-  Object get initialRouteArgs => _initialArgsToPass;
-  static ParentRouteData of(BuildContext context) {
+  Object? get initialRouteArgs => _initialArgsToPass;
+  static ParentRouteData? of(BuildContext context) {
     var modal = ModalRoute.of(context);
     if (modal != null && modal?.settings is ParentRouteData) {
       return modal.settings as ParentRouteData;

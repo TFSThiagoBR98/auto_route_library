@@ -8,44 +8,44 @@ import '../utils.dart';
 
 @immutable
 class PageRouteInfo {
-  final String _name;
-  final String path;
-  final RouteMatch match;
+  final String? _name;
+  final String? path;
+  final RouteMatch? match;
   final Map<String, dynamic> params;
   final Map<String, dynamic> queryParams;
-  final List<PageRouteInfo> initialChildren;
+  final List<PageRouteInfo>? initialChildren;
 
   const PageRouteInfo(
     this._name, {
-    @required this.path,
+    required this.path,
     this.initialChildren,
     this.match,
     this.params = const {},
     this.queryParams = const {},
   });
 
-  String get routeName => _name;
+  String? get routeName => _name;
 
-  String get stringMatch {
+  String? get stringMatch {
     if (match != null) {
-      return p.joinAll(match.segments);
+      return p.joinAll(match!.segments);
     }
     return _expand(path, params);
   }
 
   String get fullPath => p.joinAll(
-      [stringMatch, if (hasInitialChildren) initialChildren.last.fullPath]);
+      [stringMatch!, if (hasInitialChildren) initialChildren!.last.fullPath]);
 
   bool get hasInitialChildren => !listNullOrEmpty(initialChildren);
 
   bool get fromRedirect => match?.fromRedirect == true;
 
-  static String _expand(String template, Map<String, dynamic> params) {
+  static String? _expand(String? template, Map<String, dynamic> params) {
     if (mapNullOrEmpty(params)) {
       return template;
     }
     var paramsRegex = RegExp(":(${params.keys.join('|')})");
-    var path = template.replaceAllMapped(paramsRegex, (match) {
+    var path = template!.replaceAllMapped(paramsRegex, (match) {
       return params[match.group(1)]?.toString() ?? '';
     });
     return path;
@@ -56,16 +56,16 @@ class PageRouteInfo {
     return 'Route{name: $_name, path: $path, params: $params}';
   }
 
-  PageRouteInfo.fromMatch(this.match)
+  PageRouteInfo.fromMatch(RouteMatch this.match)
       : _name = match.config.name,
         path = match.config.path,
-        params = match.pathParams?.rawMap,
-        queryParams = match.queryParams?.rawMap,
+        params = match.pathParams.rawMap,
+        queryParams = match.queryParams.rawMap,
         initialChildren = match.buildChildren();
 
 // maybe?
   Future<void> show(BuildContext context) {
-    return context.router.push(this);
+    return context.router!.push(this);
   }
 
   @override
@@ -84,9 +84,9 @@ class PageRouteInfo {
 }
 
 class RouteData {
-  final PageRouteInfo route;
-  final RouteData parent;
-  final RouteConfig config;
+  final PageRouteInfo? route;
+  final RouteData? parent;
+  final RouteConfig? config;
 
   const RouteData({
     this.route,
@@ -95,11 +95,11 @@ class RouteData {
   });
 
   List<RouteData> get breadcrumbs => List.unmodifiable([
-        if (parent != null) ...parent.breadcrumbs,
+        if (parent != null) ...parent!.breadcrumbs,
         this,
       ]);
 
-  static RouteData of(BuildContext context) {
+  static RouteData? of(BuildContext context) {
     var scope = context.dependOnInheritedWidgetOfExactType<StackEntryScope>();
     assert(() {
       if (scope == null) {
@@ -110,26 +110,26 @@ class RouteData {
       }
       return true;
     }());
-    return scope.entry?.routeData;
+    return scope!.entry?.routeData;
   }
 
-  T as<T extends PageRouteInfo>() {
+  T? as<T extends PageRouteInfo?>() {
     if (route is! T) {
       throw FlutterError(
           'Expected [${T.toString()}],  found [${route.runtimeType}]');
     }
-    return route as T;
+    return route as T?;
   }
 
-  String get name => route._name;
+  String? get name => route!._name;
 
-  String get path => route.path;
+  String? get path => route!.path;
 
-  String get match => route.stringMatch;
+  String? get match => route!.stringMatch;
 
-  Parameters get pathParams => Parameters(route.params);
+  Parameters get pathParams => Parameters(route!.params);
 
-  Parameters get queryParams => Parameters(route.queryParams);
+  Parameters get queryParams => Parameters(route!.queryParams);
 
-  String get fragment => route.match?.fragment;
+  String? get fragment => route!.match?.fragment;
 }

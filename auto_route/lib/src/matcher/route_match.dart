@@ -9,14 +9,14 @@ class RouteMatch {
   final RouteConfig config;
   final Parameters pathParams;
   final Parameters queryParams;
-  final List<RouteMatch> children;
+  final List<RouteMatch?>? children;
   final String fragment;
   final List<String> segments;
   final bool fromRedirect;
 
   const RouteMatch({
-    @required this.config,
-    @required this.segments,
+    required this.config,
+    required this.segments,
     this.children,
     this.fromRedirect = false,
     this.pathParams = const Parameters({}),
@@ -28,26 +28,26 @@ class RouteMatch {
 
   bool get hasChildren => !listNullOrEmpty(children);
 
-  PageRouteInfo get toRoute => config.routeBuilder(this);
+  PageRouteInfo get toRoute => config.routeBuilder!(this);
 
   String get path => config.path;
 
-  List<String> get url => [...segments, if (hasChildren) ...children.last.url];
+  List<String> get url => [...segments, if (hasChildren) ...children!.last!.url];
 
-  List<PageRouteInfo> buildChildren() {
-    return children?.map((m) => m.toRoute)?.toList(growable: false);
+  List<PageRouteInfo>? buildChildren() {
+    return children?.map((m) => m!.toRoute)?.toList(growable: false);
   }
 
   RouteMatch copyWith({
-    String key,
-    String path,
-    RouteConfig def,
-    Parameters pathParams,
-    Parameters queryParams,
-    List<RouteMatch> children,
-    String fragment,
-    List<String> segments,
-    bool fromRedirect,
+    String? key,
+    String? path,
+    RouteConfig? def,
+    Parameters? pathParams,
+    Parameters? queryParams,
+    List<RouteMatch?>? children,
+    String? fragment,
+    List<String>? segments,
+    bool? fromRedirect,
   }) {
     return RouteMatch(
       config: def ?? this.config,

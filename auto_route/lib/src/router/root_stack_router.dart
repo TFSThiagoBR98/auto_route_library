@@ -11,19 +11,21 @@ typedef PageBuilder = AutoRoutePage Function(StackEntryItem entry);
 typedef PageFactory = Page<dynamic> Function(StackEntryItem entry);
 
 abstract class RootStackRouter extends BranchEntry {
+  RootStackRouter() : super(routeCollection: null, pageBuilder: null);
+
   @override
   RouteCollection get routeCollection => RouteCollection.from(routes);
 
   @override
   PageBuilder get pageBuilder => _pageBuilder;
 
-  RootRouterDelegate _lazyRootDelegate;
+  RootRouterDelegate? _lazyRootDelegate;
 
   // _lazyRootDelegate is only built one time
   RootRouterDelegate delegate({
-    List<PageRouteInfo> initialRoutes,
-    String initialDeepLink,
-    String navRestorationScopeId,
+    List<PageRouteInfo>? initialRoutes,
+    String? initialDeepLink,
+    String? navRestorationScopeId,
     List<NavigatorObserver> navigatorObservers = const [],
   }) {
     return _lazyRootDelegate ??= RootRouterDelegate(
@@ -43,8 +45,7 @@ abstract class RootStackRouter extends BranchEntry {
   List<RouteConfig> get routes;
 
   AutoRoutePage _pageBuilder(StackEntryItem entry) {
-    var builder = pagesMap[entry.routeData.name];
-    assert(builder != null);
-    return builder(entry);
+    var builder = pagesMap[entry.routeData!.name]!;
+    return builder(entry) as AutoRoutePage;
   }
 }

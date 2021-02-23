@@ -6,13 +6,13 @@ import 'package:flutter/material.dart';
 import '../../utils.dart';
 import '../controller/routing_controller.dart';
 
-class RootRouterDelegate extends RouterDelegate<List<PageRouteInfo>>
+class RootRouterDelegate extends RouterDelegate<List<PageRouteInfo?>?>
     with ChangeNotifier {
-  final List<PageRouteInfo> initialRoutes;
+  final List<PageRouteInfo>? initialRoutes;
   final GlobalKey<NavigatorState> navigatorKey;
   final StackRouter controller;
-  final String initialDeepLink;
-  final String navRestorationScopeId;
+  final String? initialDeepLink;
+  final String? navRestorationScopeId;
   final List<NavigatorObserver> navigatorObservers;
 
   static RootRouterDelegate of(BuildContext context) {
@@ -43,7 +43,7 @@ class RootRouterDelegate extends RouterDelegate<List<PageRouteInfo>>
   }
 
   @override
-  List<PageRouteInfo> get currentConfiguration {
+  List<PageRouteInfo?>? get currentConfiguration {
     var route = controller.topMost.current;
     if (route == null) {
       return null;
@@ -52,7 +52,7 @@ class RootRouterDelegate extends RouterDelegate<List<PageRouteInfo>>
   }
 
   @override
-  Future<void> setInitialRoutePath(List<PageRouteInfo> routes) {
+  Future<void> setInitialRoutePath(List<PageRouteInfo?>? routes) {
     // setInitialRoutePath is re-fired on enabling
     // select widget mode from flutter inspector,
     // this check is preventing it from rebuilding the app
@@ -72,9 +72,9 @@ class RootRouterDelegate extends RouterDelegate<List<PageRouteInfo>>
   }
 
   @override
-  Future<void> setNewRoutePath(List<PageRouteInfo> routes) {
+  Future<void> setNewRoutePath(List<PageRouteInfo?>? routes) {
     if (!listNullOrEmpty(routes)) {
-      return (controller as BranchEntry).updateOrReplaceRoutes(routes);
+      return (controller as BranchEntry).updateOrReplaceRoutes(routes!);
     }
     return SynchronousFuture(null);
   }
@@ -95,31 +95,31 @@ class RootRouterDelegate extends RouterDelegate<List<PageRouteInfo>>
 }
 
 class AutoRouteNavigator extends StatelessWidget {
-  final StackRouter router;
+  final StackRouter? router;
   // final String navRestorationScopeId;
   final List<NavigatorObserver> navigatorObservers;
-  final void Function(Route route) didPop;
+  final void Function(Route route)? didPop;
 
   const AutoRouteNavigator({
-    @required this.router,
-    @required this.navigatorObservers,
+    required this.router,
+    required this.navigatorObservers,
     // this.navRestorationScopeId,
     this.didPop,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) => Navigator(
-        key: router.navigatorKey,
+        key: router!.navigatorKey,
         observers: navigatorObservers,
         // restorationScopeId: navRestorationScopeId,
-        pages: router.hasEntries ? router.stack : const [_PlaceHolderPage()],
+        pages: router!.hasEntries ? router!.stack : const [_PlaceHolderPage()],
         transitionDelegate: _CustomTransitionDelegate(),
         onPopPage: (route, result) {
           if (!route.didPop(result)) {
             return false;
           }
-          router.removeLast();
+          router!.removeLast();
           didPop?.call(route);
           return true;
         },
@@ -143,22 +143,22 @@ class _PlaceHolderPage extends Page {
 class _CustomTransitionDelegate extends TransitionDelegate {
   @override
   Iterable<RouteTransitionRecord> resolve(
-      {List<RouteTransitionRecord> newPageRouteHistory,
-      Map<RouteTransitionRecord, RouteTransitionRecord>
+      {List<RouteTransitionRecord>? newPageRouteHistory,
+      Map<RouteTransitionRecord?, RouteTransitionRecord>?
           locationToExitingPageRoute,
-      Map<RouteTransitionRecord, List<RouteTransitionRecord>>
+      Map<RouteTransitionRecord?, List<RouteTransitionRecord>>?
           pageRouteToPagelessRoutes}) {
     final List<RouteTransitionRecord> results = <RouteTransitionRecord>[];
     // This method will handle the exiting route and its corresponding pageless
     // route at this location. It will also recursively check if there is any
     // other exiting routes above it and handle them accordingly.
-    void handleExitingRoute(RouteTransitionRecord location, bool isLast) {
-      final RouteTransitionRecord exitingPageRoute =
-          locationToExitingPageRoute[location];
+    void handleExitingRoute(RouteTransitionRecord? location, bool isLast) {
+      final RouteTransitionRecord? exitingPageRoute =
+          locationToExitingPageRoute![location];
       if (exitingPageRoute == null) return;
       if (exitingPageRoute.isWaitingForExitingDecision) {
         final bool hasPagelessRoute =
-            pageRouteToPagelessRoutes.containsKey(exitingPageRoute);
+            pageRouteToPagelessRoutes!.containsKey(exitingPageRoute);
         final bool isLastExitingPageRoute =
             isLast && !locationToExitingPageRoute.containsKey(exitingPageRoute);
         if (isLastExitingPageRoute && !hasPagelessRoute) {
@@ -169,7 +169,7 @@ class _CustomTransitionDelegate extends TransitionDelegate {
         }
         if (hasPagelessRoute) {
           final List<RouteTransitionRecord> pagelessRoutes =
-              pageRouteToPagelessRoutes[exitingPageRoute];
+              pageRouteToPagelessRoutes[exitingPageRoute]!;
           for (final RouteTransitionRecord pagelessRoute in pagelessRoutes) {
             assert(pagelessRoute.isWaitingForExitingDecision);
             if (isLastExitingPageRoute &&
@@ -188,14 +188,14 @@ class _CustomTransitionDelegate extends TransitionDelegate {
     }
 
     // Handles exiting route in the beginning of list.
-    handleExitingRoute(null, newPageRouteHistory.isEmpty);
+    handleExitingRoute(null, newPageRouteHistory!.isEmpty);
 
     for (final RouteTransitionRecord pageRoute in newPageRouteHistory) {
       final bool isLastIteration = newPageRouteHistory.last == pageRoute;
       final firstPageIsPlaceHolder = results.isNotEmpty &&
           results.first.route.settings is _PlaceHolderPage;
       if (pageRoute.isWaitingForEnteringDecision) {
-        if (!locationToExitingPageRoute.containsKey(pageRoute) &&
+        if (!locationToExitingPageRoute!.containsKey(pageRoute) &&
             isLastIteration &&
             !firstPageIsPlaceHolder) {
           pageRoute.markForPush();

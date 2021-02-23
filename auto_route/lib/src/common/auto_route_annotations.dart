@@ -6,27 +6,27 @@ class AutoRouterAnnotation {
   /// if true a Navigator extension will be generated with
   /// helper push methods of all routes
 
-  final bool generateNavigationHelperExtension;
+  final bool? generateNavigationHelperExtension;
 
   /// This has no effect if [usesLegacyGenerator] is true
   ///
   /// defaults to 'Routes'
-  final String routesClassName;
+  final String? routesClassName;
 
   /// This is the prefix for each Route String that is generated
   /// initial routes will always be named '/'
   /// defaults to '/'
   /// it has no effect unless [usesLegacyGenerator] is true
-  final String routePrefix;
+  final String? routePrefix;
 
   /// if true legacy generator that
   /// uses ExtendedNavigator will be used instead
-  final bool usesLegacyGenerator;
+  final bool? usesLegacyGenerator;
 
   /// if true relative imports will be generated
   /// when possible
   /// defaults to true
-  final bool preferRelativeImports;
+  final bool? preferRelativeImports;
 
   final List<AutoRoute> routes;
 
@@ -43,7 +43,7 @@ class AutoRouterAnnotation {
   /// so ProductDetailsPage would be ProductDetailsRoute
   ///
   /// defaults no null, ignored if a route name is provided.
-  final String replaceInRouteName;
+  final String? replaceInRouteName;
 
   const AutoRouterAnnotation._(
     this.generateNavigationHelperExtension,
@@ -60,13 +60,13 @@ class AutoRouterAnnotation {
 /// overridden by AutoRoute
 class MaterialAutoRouter extends AutoRouterAnnotation {
   const MaterialAutoRouter({
-    bool generateNavigationHelperExtension,
-    String routesClassName,
-    String pathPrefix,
-    bool preferRelativeImports,
-    @required List<AutoRoute> routes,
-    bool usesLegacyGenerator,
-    String replaceInRouteName,
+    bool? generateNavigationHelperExtension,
+    String? routesClassName,
+    String? pathPrefix,
+    bool? preferRelativeImports,
+    required List<AutoRoute> routes,
+    bool? usesLegacyGenerator,
+    String? replaceInRouteName,
   }) : super._(
           generateNavigationHelperExtension,
           routesClassName,
@@ -82,13 +82,13 @@ class MaterialAutoRouter extends AutoRouterAnnotation {
 /// overridden by AutoRoute
 class CupertinoAutoRouter extends AutoRouterAnnotation {
   const CupertinoAutoRouter({
-    bool generateNavigationHelperExtension,
-    String routesClassName,
-    String pathPrefix,
-    bool preferRelativeImports,
-    @required List<AutoRoute> routes,
-    bool usesLegacyGenerator,
-    String replaceInRouteName,
+    bool? generateNavigationHelperExtension,
+    String? routesClassName,
+    String? pathPrefix,
+    bool? preferRelativeImports,
+    required List<AutoRoute> routes,
+    bool? usesLegacyGenerator,
+    String? replaceInRouteName,
   }) : super._(
           generateNavigationHelperExtension,
           routesClassName,
@@ -102,13 +102,13 @@ class CupertinoAutoRouter extends AutoRouterAnnotation {
 
 class AdaptiveAutoRouter extends AutoRouterAnnotation {
   const AdaptiveAutoRouter({
-    bool generateNavigationHelperExtension,
-    String routesClassName,
-    String pathPrefix,
-    bool preferRelativeImports,
-    @required List<AutoRoute> routes,
-    bool usesLegacyGenerator,
-    String replaceInRouteName,
+    bool? generateNavigationHelperExtension,
+    String? routesClassName,
+    String? pathPrefix,
+    bool? preferRelativeImports,
+    required List<AutoRoute> routes,
+    bool? usesLegacyGenerator,
+    String? replaceInRouteName,
   }) : super._(
           generateNavigationHelperExtension,
           routesClassName,
@@ -132,7 +132,7 @@ class CustomAutoRouter extends AutoRouterAnnotation {
   ///
   /// you should only reference the function so
   /// the generator can import it into router_base.dart
-  final Function transitionsBuilder;
+  final Function? transitionsBuilder;
 
   /// This builder function is passed to customRouteBuilder property
   /// in [CustomPage]
@@ -145,23 +145,23 @@ class CustomAutoRouter extends AutoRouterAnnotation {
   /// this builder function accepts a BuildContext and a CustomPage
   /// that has all the other properties assigned to it
   /// so using them then is totally up to you.
-  final Function customRouteBuilder;
+  final Function? customRouteBuilder;
 
   /// route transition duration in milliseconds
   /// is passed to [PageRouteBuilder]
   /// this property is ignored unless a [transitionBuilder] is provided
-  final int durationInMilliseconds;
+  final int? durationInMilliseconds;
 
   /// route reverse transition duration in milliseconds
   /// is passed to [PageRouteBuilder]
   /// this property is ignored unless a [transitionBuilder] is provided
-  final int reverseDurationInMilliseconds;
+  final int? reverseDurationInMilliseconds;
 
   /// passed to the opaque property in [PageRouteBuilder]
-  final bool opaque;
+  final bool? opaque;
 
   /// passed to the barrierDismissible property in [PageRouteBuilder]
-  final bool barrierDismissible;
+  final bool? barrierDismissible;
 
   const CustomAutoRouter(
       {this.transitionsBuilder,
@@ -170,13 +170,13 @@ class CustomAutoRouter extends AutoRouterAnnotation {
       this.reverseDurationInMilliseconds,
       this.customRouteBuilder,
       this.opaque,
-      bool generateNavigationHelperExtension,
-      String routesClassName,
-      String pathPrefix,
-      @required List<AutoRoute> routes,
-      bool preferRelativeImports,
-      bool usesLegacyGenerator,
-      String replaceInRouteName})
+      bool? generateNavigationHelperExtension,
+      String? routesClassName,
+      String? pathPrefix,
+      required List<AutoRoute> routes,
+      bool? preferRelativeImports,
+      bool? usesLegacyGenerator,
+      String? replaceInRouteName})
       : super._(
           generateNavigationHelperExtension,
           routesClassName,
@@ -195,15 +195,15 @@ class CustomAutoRouter extends AutoRouterAnnotation {
 class AutoRoute<T> {
   // initial route will have an explicit name of "/"
   // there could be only one initial route per navigator.
-  final bool initial;
+  final bool? initial;
 
   /// passed to the fullscreenDialog property in [MaterialPageRoute]
-  final bool fullscreenDialog;
+  final bool? fullscreenDialog;
 
   /// passed to the maintainState property in [MaterialPageRoute]
-  final bool maintainState;
+  final bool? maintainState;
 
-  final List<AutoRoute> children;
+  final List<AutoRoute>? children;
 
   /// route path name which will be assigned to the given variable name
   /// const homeScreen = '[path]';
@@ -211,15 +211,15 @@ class AutoRoute<T> {
   /// prefixed with '/' will be used;
   /// homeScreen -> home-screen
 
-  final String path;
-  final String name;
+  final String? path;
+  final String? name;
 
-  final Type page;
+  final Type? page;
 
-  final List<Type> guards;
+  final List<Type>? guards;
 
-  final bool fullMatch;
-  final bool usesTabsRouter;
+  final bool? fullMatch;
+  final bool? usesTabsRouter;
 
   const AutoRoute(
       {this.page,
@@ -238,24 +238,24 @@ class RedirectRoute extends AutoRoute {
   final String redirectTo;
 
   const RedirectRoute({
-    @required String path,
-    @required this.redirectTo,
+    required String path,
+    required this.redirectTo,
   })  : assert(redirectTo != null),
         super(path: path, fullMatch: true);
 }
 
 class MaterialRoute<T> extends AutoRoute<T> {
   const MaterialRoute(
-      {String path,
-      @required Type page,
-      bool initial,
-      bool fullscreenDialog,
-      bool maintainState,
-      bool fullMatch,
-      bool usesTabsRouter,
-      String name,
-      List<Type> guards,
-      List<AutoRoute> children})
+      {String? path,
+      required Type page,
+      bool? initial,
+      bool? fullscreenDialog,
+      bool? maintainState,
+      bool? fullMatch,
+      bool? usesTabsRouter,
+      String? name,
+      List<Type>? guards,
+      List<AutoRoute>? children})
       : super(
           page: page,
           guards: guards,
@@ -273,20 +273,20 @@ class MaterialRoute<T> extends AutoRoute<T> {
 // forces usage of CupertinoPageRoute instead of MaterialPageRoute
 class CupertinoRoute<T> extends AutoRoute<T> {
   /// passed to the title property in [CupertinoPageRoute]
-  final String title;
+  final String? title;
 
   const CupertinoRoute(
-      {bool initial,
-      bool fullscreenDialog,
-      bool maintainState,
-      String path,
+      {bool? initial,
+      bool? fullscreenDialog,
+      bool? maintainState,
+      String? path,
       this.title,
-      String name,
-      bool fullMatch,
-      @required Type page,
-      bool usesTabsRouter,
-      List<Type> guards,
-      List<AutoRoute> children})
+      String? name,
+      bool? fullMatch,
+      required Type page,
+      bool? usesTabsRouter,
+      List<Type>? guards,
+      List<AutoRoute>? children})
       : super(
           initial: initial,
           fullscreenDialog: fullscreenDialog,
@@ -303,18 +303,18 @@ class CupertinoRoute<T> extends AutoRoute<T> {
 
 class AdaptiveRoute<T> extends AutoRoute<T> {
   const AdaptiveRoute(
-      {bool initial,
-      bool fullscreenDialog,
-      bool maintainState,
-      String name,
-      String path,
-      bool fullMatch,
-      bool usesTabsRouter,
-      Type returnType,
+      {bool? initial,
+      bool? fullscreenDialog,
+      bool? maintainState,
+      String? name,
+      String? path,
+      bool? fullMatch,
+      bool? usesTabsRouter,
+      Type? returnType,
       this.cupertinoPageTitle,
-      @required Type page,
-      List<Type> guards,
-      List<AutoRoute> children})
+      required Type page,
+      List<Type>? guards,
+      List<AutoRoute>? children})
       : super(
             initial: initial,
             fullscreenDialog: fullscreenDialog,
@@ -328,7 +328,7 @@ class AdaptiveRoute<T> extends AutoRoute<T> {
             children: children);
 
   /// passed to the title property in [CupertinoPageRoute]
-  final String cupertinoPageTitle;
+  final String? cupertinoPageTitle;
 }
 
 class CustomRoute<T> extends AutoRoute<T> {
@@ -341,7 +341,7 @@ class CustomRoute<T> extends AutoRoute<T> {
   ///
   /// you should only reference the function so
   /// the generator can import it into the generated file
-  final Function transitionsBuilder;
+  final Function? transitionsBuilder;
 
   /// this builder function is passed to customRouteBuilder property
   /// in [CustomPage]
@@ -354,38 +354,38 @@ class CustomRoute<T> extends AutoRoute<T> {
   /// this builder function accepts a BuildContext and a CustomPage
   /// that has all the other properties assigned to it
   /// so using them then is totally up to you.
-  final Function customRouteBuilder;
+  final Function? customRouteBuilder;
 
   /// route transition duration in milliseconds
   /// is passed to [PageRouteBuilder]
   /// this property is ignored unless a [transitionBuilder] is provided
-  final int durationInMilliseconds;
+  final int? durationInMilliseconds;
 
   /// route reverse transition duration in milliseconds
   /// is passed to [PageRouteBuilder]
   /// this property is ignored unless a [transitionBuilder] is provided
-  final int reverseDurationInMilliseconds;
+  final int? reverseDurationInMilliseconds;
 
   /// passed to the opaque property in [PageRouteBuilder]
-  final bool opaque;
+  final bool? opaque;
 
   /// passed to the barrierDismissible property in [PageRouteBuilder]
-  final bool barrierDismissible;
+  final bool? barrierDismissible;
 
   /// passed to the barrierLabel property in [PageRouteBuilder]
-  final String barrierLabel;
+  final String? barrierLabel;
 
   const CustomRoute({
-    bool initial,
-    bool fullscreenDialog,
-    bool maintainState,
-    String name,
-    String path,
-    bool fullMatch,
-    @required Type page,
-    List<Type> guards,
-    bool usesTabsRouter,
-    List<AutoRoute> children,
+    bool? initial,
+    bool? fullscreenDialog,
+    bool? maintainState,
+    String? name,
+    String? path,
+    bool? fullMatch,
+    required Type page,
+    List<Type>? guards,
+    bool? usesTabsRouter,
+    List<AutoRoute>? children,
     this.customRouteBuilder,
     this.barrierLabel,
     this.transitionsBuilder,
@@ -407,7 +407,7 @@ class CustomRoute<T> extends AutoRoute<T> {
 }
 
 class PathParam {
-  final String name;
+  final String? name;
 
   const PathParam([this.name]);
 }
@@ -415,7 +415,7 @@ class PathParam {
 const pathParam = PathParam();
 
 class QueryParam {
-  final String name;
+  final String? name;
 
   const QueryParam([this.name]);
 }

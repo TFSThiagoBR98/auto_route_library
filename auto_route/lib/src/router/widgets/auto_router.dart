@@ -8,20 +8,20 @@ import '../controller/routing_controller.dart';
 
 class AutoRouter extends StatefulWidget {
   final List<NavigatorObserver> navigatorObservers;
-  final Widget Function(BuildContext context, Widget content) builder;
+  final Widget Function(BuildContext context, Widget content)? builder;
   // final String navRestorationScopeId;
 
   const AutoRouter({
-    Key key,
+    Key? key,
     this.navigatorObservers = const [],
     this.builder,
     // this.navRestorationScopeId,
   }) : super(key: key);
 
   static Widget declarative(
-          {Key key,
-          @required RoutesGenerator onGenerateRoutes,
-          Function(PageRouteInfo route) onPopRoute,
+          {Key? key,
+          required RoutesGenerator onGenerateRoutes,
+          Function(PageRouteInfo route)? onPopRoute,
           // String navRestorationScopeId,
           List<NavigatorObserver> navigatorObservers = const []}) =>
       _DeclarativeAutoRouter(
@@ -34,7 +34,7 @@ class AutoRouter extends StatefulWidget {
   @override
   AutoRouterState createState() => AutoRouterState();
 
-  static StackRouter of(BuildContext context) {
+  static StackRouter? of(BuildContext context) {
     var scope = StackRouterScope.of(context);
     assert(() {
       if (scope == null) {
@@ -45,28 +45,28 @@ class AutoRouter extends StatefulWidget {
       }
       return true;
     }());
-    return scope.controller;
+    return scope!.controller;
   }
 
-  static StackRouter innerRouterOf(BuildContext context, String routeName) {
+  static StackRouter? innerRouterOf(BuildContext context, String routeName) {
     return of(context)?.innerRouterOf<StackRouter>(routeName);
   }
 }
 
 class AutoRouterState extends State<AutoRouter> {
-  StackRouter _controller;
-  StackRouter get controller => _controller;
+  StackRouter? _controller;
+  StackRouter? get controller => _controller;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     if (_controller == null) {
-      final entry = StackEntryScope.of(context);
+      final entry = StackEntryScope.of(context)!;
       assert(entry is RoutingController);
-      _controller = entry as RoutingController;
+      _controller = (entry as RoutingController) as StackRouter?;
       assert(_controller != null);
       var rootDelegate = RootRouterDelegate.of(context);
-      _controller.addListener(() {
+      _controller!.addListener(() {
         rootDelegate.notify();
         setState(() {});
       });
@@ -88,7 +88,7 @@ class AutoRouterState extends State<AutoRouter> {
         child: widget.builder == null
             ? navigator
             : Builder(
-                builder: (ctx) => widget.builder(ctx, navigator),
+                builder: (ctx) => widget.builder!(ctx, navigator),
               ),
       ),
     );
@@ -96,17 +96,17 @@ class AutoRouterState extends State<AutoRouter> {
 }
 
 typedef RoutesGenerator = List<PageRouteInfo> Function(
-    BuildContext context, List<PageRouteInfo> routes);
+    BuildContext context, List<PageRouteInfo>? routes);
 
 class _DeclarativeAutoRouter extends StatefulWidget {
   final RoutesGenerator onGenerateRoutes;
-  final Function(PageRouteInfo route) onPopRoute;
+  final Function(PageRouteInfo route)? onPopRoute;
   final List<NavigatorObserver> navigatorObservers;
   // final String navRestorationScopeId;
 
   const _DeclarativeAutoRouter({
-    Key key,
-    @required this.onGenerateRoutes,
+    Key? key,
+    required this.onGenerateRoutes,
     this.navigatorObservers = const [],
     this.onPopRoute,
     // this.navRestorationScopeId,
@@ -117,24 +117,24 @@ class _DeclarativeAutoRouter extends StatefulWidget {
 }
 
 class _DeclarativeAutoRouterState extends State<_DeclarativeAutoRouter> {
-  List<PageRouteInfo> _routes;
-  StackRouter _controller;
+  List<PageRouteInfo>? _routes;
+  StackRouter? _controller;
 
-  StackRouter get controller => _controller;
+  StackRouter? get controller => _controller;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     if (_controller == null) {
-      final entry = StackEntryScope.of(context);
+      final entry = StackEntryScope.of(context)!;
       assert(entry is StackRouter);
       _controller = entry as StackRouter;
       assert(_controller != null);
-      _routes = widget.onGenerateRoutes(context, _controller.preMatchedRoutes);
-      (_controller as BranchEntry).updateDeclarativeRoutes(_routes);
+      _routes = widget.onGenerateRoutes(context, _controller!.preMatchedRoutes);
+      (_controller as BranchEntry).updateDeclarativeRoutes(_routes!);
       var rootDelegate = RootRouterDelegate.of(context);
 
-      _controller.addListener(() {
+      _controller!.addListener(() {
         rootDelegate.notify();
         setState(() {});
       });
@@ -151,7 +151,7 @@ class _DeclarativeAutoRouterState extends State<_DeclarativeAutoRouter> {
       navigatorObservers: widget.navigatorObservers,
       didPop: (route) {
         widget.onPopRoute
-            ?.call((route.settings as AutoRoutePage).routeData.route);
+            ?.call((route.settings as AutoRoutePage).routeData!.route!);
       },
     );
     return RoutingControllerScope(
@@ -172,5 +172,5 @@ class _DeclarativeAutoRouterState extends State<_DeclarativeAutoRouter> {
 }
 
 class EmptyRouterPage extends AutoRouter {
-  const EmptyRouterPage({Key key}) : super(key: key);
+  const EmptyRouterPage({Key? key}) : super(key: key);
 }

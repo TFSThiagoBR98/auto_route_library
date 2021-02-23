@@ -7,7 +7,7 @@ import 'package:path/path.dart' as p;
 import '../../matcher/route_matcher.dart';
 import '../../utils.dart';
 
-class DefaultRouteParser extends RouteInformationParser<List<PageRouteInfo>> {
+class DefaultRouteParser extends RouteInformationParser<List<PageRouteInfo>?> {
   final RouteMatcher _matcher;
   final bool includePrefixMatches;
 
@@ -16,27 +16,27 @@ class DefaultRouteParser extends RouteInformationParser<List<PageRouteInfo>> {
         assert(includePrefixMatches != null);
 
   @override
-  Future<List<PageRouteInfo>> parseRouteInformation(
+  Future<List<PageRouteInfo>?> parseRouteInformation(
       RouteInformation routeInformation) async {
-    var matches = _matcher.match(routeInformation.location,
+    var matches = _matcher.match(routeInformation.location!,
         includePrefixMatches: includePrefixMatches);
     var routes;
     if (matches != null) {
-      routes = matches.map((m) => m.toRoute).toList(growable: false);
+      routes = matches.map((m) => m!.toRoute).toList(growable: false);
     }
-    return SynchronousFuture<List<PageRouteInfo>>(routes);
+    return SynchronousFuture<List<PageRouteInfo>?>(routes);
   }
 
   @override
-  RouteInformation restoreRouteInformation(List<PageRouteInfo> routes) {
-    final location = _getNormalizedPath(routes);
+  RouteInformation restoreRouteInformation(List<PageRouteInfo>? routes) {
+    final location = _getNormalizedPath(routes!);
     return RouteInformation(location: location);
   }
 }
 
 String _getNormalizedPath(List<PageRouteInfo> routes) {
   var fullPath = p.joinAll([
-    ...routes.where((e) => e.stringMatch.isNotEmpty).map((e) => e.stringMatch),
+    ...routes.where(((e) => e.stringMatch!.isNotEmpty) as bool Function(PageRouteInfo)).map(((e) => e.stringMatch!) as String Function(PageRouteInfo)),
   ]);
   var normalized = p.normalize(fullPath);
   var query = routes.last.queryParams;
@@ -44,7 +44,7 @@ String _getNormalizedPath(List<PageRouteInfo> routes) {
     normalized += "?${query.keys.map((k) {
       var value = query[k];
       if (value is List) {
-        value = (value as List).map((v) => '$k=$v').join('&');
+        value = value.map((v) => '$k=$v').join('&');
       }
       return '$k=$value';
     }).join('&')}";

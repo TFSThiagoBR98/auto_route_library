@@ -22,13 +22,13 @@ class RouteCollection {
 
   Iterable<RouteConfig> get routes => _routesMap.values;
 
-  RouteConfig operator [](String key) => _routesMap[key];
+  RouteConfig? operator [](String? key) => _routesMap[key];
 
   bool containsKey(String key) => _routesMap.containsKey(key);
 
-  RouteCollection subCollectionOf(String key) {
+  RouteCollection? subCollectionOf(String? key) {
     assert(this[key]?.children != null, "$key does not have children");
-    return this[key].children;
+    return this[key]!.children;
   }
 
   @override
@@ -47,7 +47,7 @@ class RouteMatcher {
 
   const RouteMatcher(this.collection) : assert(collection != null);
 
-  List<RouteMatch> match(String rawPath, {bool includePrefixMatches = false}) {
+  List<RouteMatch?>? match(String rawPath, {bool includePrefixMatches = false}) {
     assert(includePrefixMatches != null);
     return _match(
       Uri.parse(rawPath),
@@ -57,12 +57,12 @@ class RouteMatcher {
     );
   }
 
-  List<RouteMatch> _match(Uri uri, RouteCollection collection,
+  List<RouteMatch?>? _match(Uri uri, RouteCollection collection,
       {bool includePrefixMatches = false,
       bool root = false,
       bool fromRedirect = false}) {
     final pathSegments = p.split(uri.path);
-    final matches = <RouteMatch>[];
+    final matches = <RouteMatch?>[];
     for (var config in collection.routes) {
       var match = matchRoute(uri, config, fromRedirect: fromRedirect);
       if (match != null) {
@@ -84,7 +84,7 @@ class RouteMatcher {
           if (config.isSubTree) {
             final rest = uri.replace(
                 pathSegments: pathSegments.sublist(match.segments.length));
-            final children = _match(rest, config.children,
+            final children = _match(rest, config.children!,
                 includePrefixMatches: includePrefixMatches);
             match = match.copyWith(children: children);
           }
@@ -98,7 +98,7 @@ class RouteMatcher {
           // include empty route if exists
           if (config.isSubTree && !match.hasChildren) {
             match = match.copyWith(
-                children: _match(uri.replace(path: ''), config.children));
+                children: _match(uri.replace(path: ''), config.children!));
           }
 
           matches.add(match);
@@ -108,20 +108,20 @@ class RouteMatcher {
     }
 
     if (matches.isEmpty ||
-        (root && matches.last.url.length < pathSegments.length)) {
+        (root && matches.last!.url.length < pathSegments.length)) {
       return null;
     }
     return matches;
   }
 
-  List<RouteMatch> _handleRedirect(
+  List<RouteMatch?>? _handleRedirect(
     Uri uri,
     RouteCollection routesCollection,
     bool includePrefixMatches,
     RouteMatch match,
   ) {
     var redirectMatches = _match(
-      uri.replace(path: Uri.parse(match.config.redirectTo).path),
+      uri.replace(path: Uri.parse(match.config.redirectTo!).path),
       routesCollection,
       includePrefixMatches: includePrefixMatches,
       fromRedirect: true,
@@ -136,7 +136,7 @@ class RouteMatcher {
     return redirectMatches;
   }
 
-  RouteMatch matchRoute(Uri url, RouteConfig config,
+  RouteMatch? matchRoute(Uri url, RouteConfig config,
       {bool fromRedirect = false}) {
     var parts = p.split(config.path);
     var segments = p.split(url.path);
@@ -179,18 +179,18 @@ class RouteMatcher {
     return _resolveConfig(route, routes) != null;
   }
 
-  RouteConfig resolveConfigOrNull(PageRouteInfo route) {
+  RouteConfig? resolveConfigOrNull(PageRouteInfo route) {
     return _resolveConfig(route, collection);
   }
 
-  RouteConfig _resolveConfig(PageRouteInfo route, RouteCollection routes) {
+  RouteConfig? _resolveConfig(PageRouteInfo route, RouteCollection routes) {
     var routeConfig = routes[route.routeName];
     if (routeConfig == null) {
       return null;
     }
     if (route.hasInitialChildren) {
-      var childrenMatch = route.initialChildren
-          .every((r) => _isValidRoute(r, routeConfig.children));
+      var childrenMatch = route.initialChildren!
+          .every((r) => _isValidRoute(r, routeConfig.children!));
       if (!childrenMatch) {
         return null;
       }
@@ -202,7 +202,7 @@ class RouteMatcher {
       Map<String, List<String>> queryParametersAll) {
     final queryMap = <String, dynamic>{};
     for (var key in queryParametersAll.keys) {
-      var list = queryParametersAll[key];
+      var list = queryParametersAll[key]!;
       if (list.length > 1) {
         queryMap[key] = list;
       } else if (list.isNotEmpty) {

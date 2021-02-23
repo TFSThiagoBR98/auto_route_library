@@ -14,7 +14,7 @@ abstract class RouterBase {
 
   Set<String> get allRoutes => routes.map((e) => e.template).toSet();
 
-  Route<dynamic> onGenerateRoute(RouteSettings settings, [String basePath]) {
+  Route<dynamic>? onGenerateRoute(RouteSettings settings, [String? basePath]) {
     assert(routes != null);
     assert(settings != null);
     var match = findMatch(settings);
@@ -33,15 +33,15 @@ abstract class RouterBase {
       } else {
         data = RouteData(match);
       }
-      return pagesMap[match.routeDef.page](data);
+      return pagesMap[match.routeDef.page]!(data);
     }
     return null;
   }
 
-  String _joinPath(String basePath, String part) {
+  String _joinPath(String basePath, String? part) {
     var name;
     var path = Uri.parse(basePath).path;
-    if (part == "" || path.endsWith("/") || part.startsWith("/")) {
+    if (part == "" || path.endsWith("/") || part!.startsWith("/")) {
       name = "$path$part";
     } else {
       name = "$path/$part";
@@ -52,9 +52,9 @@ abstract class RouterBase {
   // a shorthand for calling the onGenerateRoute function
   // when using Router directly in MaterialApp or such
   // Router().onGenerateRoute becomes Router()
-  Route<dynamic> call(RouteSettings settings) => onGenerateRoute(settings);
+  Route<dynamic>? call(RouteSettings settings) => onGenerateRoute(settings);
 
-  RouteMatch findMatch(RouteSettings settings) {
+  RouteMatch? findMatch(RouteSettings settings) {
     var matcher = RouteMatcher(settings);
     for (var route in routes) {
       var match = matcher.match(route);

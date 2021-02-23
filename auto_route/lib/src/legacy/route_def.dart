@@ -2,10 +2,10 @@ import 'router_base.dart';
 
 class RouteDef {
   final String template;
-  final List<Type> guards;
-  final RouterBase generator;
+  final List<Type>? guards;
+  final RouterBase? generator;
   final Pattern pattern;
-  final Type page;
+  final Type? page;
 
   RouteDef(
     this.template, {

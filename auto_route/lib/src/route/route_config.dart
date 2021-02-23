@@ -12,28 +12,28 @@ class RouteConfig<T extends PageRouteInfo> {
   final String name;
   final String path;
   final bool fullMatch;
-  final RouteCollection _children;
-  final String redirectTo;
+  final RouteCollection? _children;
+  final String? redirectTo;
   final List<AutoRouteGuard> guards;
   final bool usesTabsRouter;
-  final RouteBuilder<T> routeBuilder;
+  final RouteBuilder<T>? routeBuilder;
 
   RouteConfig(
     this.name, {
-    @required this.path,
+    required this.path,
     this.usesTabsRouter = false,
     this.guards = const [],
     this.fullMatch = false,
     this.redirectTo,
     this.routeBuilder,
-    List<RouteConfig> children,
+    List<RouteConfig>? children,
   })  : assert(fullMatch != null),
         assert(guards != null),
         _children = children != null ? RouteCollection.from(children) : null;
 
   bool get isSubTree => _children != null;
 
-  RouteCollection get children => _children;
+  RouteCollection? get children => _children;
 
   bool get isRedirect => redirectTo != null;
 

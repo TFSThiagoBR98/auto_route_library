@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import '../../utils.dart';
 import '../controller/routing_controller.dart';
 
-class RootRouterDelegate extends RouterDelegate<List<PageRouteInfo?>?>
+class RootRouterDelegate extends RouterDelegate<List<PageRouteInfo?>>
     with ChangeNotifier {
   final List<PageRouteInfo>? initialRoutes;
   final GlobalKey<NavigatorState> navigatorKey;

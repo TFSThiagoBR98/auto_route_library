@@ -7,7 +7,7 @@ import 'package:path/path.dart' as p;
 import '../../matcher/route_matcher.dart';
 import '../../utils.dart';
 
-class DefaultRouteParser extends RouteInformationParser<List<PageRouteInfo>?> {
+class DefaultRouteParser extends RouteInformationParser<List<PageRouteInfo>> {
   final RouteMatcher _matcher;
   final bool includePrefixMatches;
 
@@ -16,7 +16,7 @@ class DefaultRouteParser extends RouteInformationParser<List<PageRouteInfo>?> {
         assert(includePrefixMatches != null);
 
   @override
-  Future<List<PageRouteInfo>?> parseRouteInformation(
+  Future<List<PageRouteInfo>> parseRouteInformation(
       RouteInformation routeInformation) async {
     var matches = _matcher.match(routeInformation.location!,
         includePrefixMatches: includePrefixMatches);
